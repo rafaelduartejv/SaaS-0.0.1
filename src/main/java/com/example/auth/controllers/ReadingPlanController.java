@@ -39,17 +39,4 @@ public class ReadingPlanController {
         readingPlan.setUser(user);
         return readingPlanService.createReadingPlan(readingPlan);
     }
-
-    @PostMapping("/{id}/days")
-    public ResponseEntity<ReadingPlanDay> addReadingPlanDay(
-            @PathVariable Long id,
-            @RequestBody ReadingPlanDay day,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
-        User user = userRepository.findByLogin(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        ReadingPlanDay savedDay = readingPlanService.addDayToReadingPlan(id, day, user);
-        return ResponseEntity.ok(savedDay);
-    }
 }
