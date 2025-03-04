@@ -1,10 +1,12 @@
 package com.example.auth.controllers;
 
 import com.example.auth.domain.reading.ReadingPlan;
+import com.example.auth.domain.reading.ReadingPlanDay;
 import com.example.auth.domain.user.User;
 import com.example.auth.repositories.UserRepository;
 import com.example.auth.services.ReadingPlanService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +38,18 @@ public class ReadingPlanController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         readingPlan.setUser(user);
         return readingPlanService.createReadingPlan(readingPlan);
+    }
+
+    @PostMapping("/{id}/days")
+    public ResponseEntity<ReadingPlanDay> addReadingPlanDay(
+            @PathVariable Long id,
+            @RequestBody ReadingPlanDay day,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        User user = userRepository.findByLogin(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        ReadingPlanDay savedDay = readingPlanService.addDayToReadingPlan(id, day, user);
+        return ResponseEntity.ok(savedDay);
     }
 }

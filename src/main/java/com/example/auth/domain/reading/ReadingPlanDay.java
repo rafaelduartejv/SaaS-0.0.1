@@ -1,32 +1,30 @@
 package com.example.auth.domain.reading;
 
 import jakarta.persistence.*;
-import lombok.*;
+
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
-@Table(name = "reading_plan_days")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-class ReadingPlanDay {
+public class ReadingPlanDay {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "reading_plan_id", nullable = false)
-    private ReadingPlan readingPlan;
-
     private LocalDate date;
-
-    @Column(columnDefinition = "TEXT")
     private String content;
-
-    @Column(columnDefinition = "TEXT")
     private String notes;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "reading_plan_id")
+    private ReadingPlan readingPlan;
 }
 
